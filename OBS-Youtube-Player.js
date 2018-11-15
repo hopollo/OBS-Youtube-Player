@@ -24,9 +24,9 @@
       var url = new URL(window.location.href);
       var songID = url.searchParams.get('watch?v');
       var listID = url.searchParams.get('list');
-      var volume = 45 || url.searchParams.get('volume');
-      var width = 535 || url.searchParams.get('w');
-      var height = 300 || url.searchParams.get('h');
+      var volume = url.searchParams.get('volume') || 45;
+      var width = url.searchParams.get('w') || 535;
+      var height = url.searchParams.get('h') || 300;
 
       var hideVideo = false || url.searchParams.get('hide');
       if (hideVideo) { document.querySelector('#player').style.display = 'none'; }
@@ -112,7 +112,5 @@
       }
     }
     </script>
-
   </body>
-
 </html>

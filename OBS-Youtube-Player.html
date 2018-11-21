@@ -22,6 +22,7 @@
       function info(txt) { return document.querySelector('#info').innerHTML = txt; }
 
       var url = new URL(window.location.href);
+      console.log('url :' + url);
       var songID = url.searchParams.get('watch?v');
       var listID = url.searchParams.get('list');
       var volume = url.searchParams.get('volume') || 45;

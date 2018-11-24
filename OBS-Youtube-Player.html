@@ -144,7 +144,7 @@
 
       function fondu() {
         console.log("fondu")
-        var videoLenght = Math.round(player.getDuration());
+        var videoLenght = Math.round(player.getDuration()) * 60;
         var currentVideoTime = Math.round(player.getCurrentTime());
         var secondBeforeEnd = 5;
 

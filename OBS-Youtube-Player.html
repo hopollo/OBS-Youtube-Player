@@ -25,10 +25,12 @@
       var songID = url.searchParams.get('watch?v');
       var listID = url.searchParams.get('list');
       var volume = url.searchParams.get('volume') || 45;
-      var width = url.searchParams.get('w') || 535;
+      var width = url.searchParams.get('w') || 534;
       var height = url.searchParams.get('h') || 300;
       var random = url.searchParams.get('random') || true;
+      var random = url.searchParams.get('random') || true;
       var loop = url.searchParams.get('loop') || true;
+      var fondu = url.searchParams.get('fondu') || true;
 
       var hideVideo = false || url.searchParams.get('hide');
       if (hideVideo) { document.querySelector('#player').style.display = 'none'; }
@@ -86,9 +88,17 @@
             switch(event.data){
               case -1:  // Not started
                 info('Unable to start playing, the video might be unaivailable or double-check the link you just entered');
+                var done = false;
+                () => {
+                  if (!done) {
+                    done = true;
+                    player.nextVideo();
+                  }
+                }
                 break;
               case 0:   // Stopped
                 console.log('Stopped');
+                player.nextVideo()
                 onAir();
                 break;
               case 1:   // Playing
@@ -121,12 +131,39 @@
           console.log('Loop playlist activated')
           var loop = player.setLoop(true);
         }
-        if(random) {
+        if (random) {
           console.log('Randomize video activated')
           var shuffle = player.setShuffle(true);
         }
-        console.log(`On air`);
         var state = player.playVideo();
+        console.log(`On air`);
+        if (fondu) {
+          fondu()
+        }
+      }
+
+      function fondu() {
+        console.log("fondu")
+        var videoLenght = Math.round(player.getDuration());
+        var currentVideoTime = Math.round(player.getCurrentTime());
+        var secondBeforeEnd = 5;
+
+        for (var i=0, len=volume; i<len; i++) {
+          setTimeout(function() {
+            console.log(`Fondu in : vol=${i}`)
+            player.setVolume(i);
+          }, 1000);
+        }
+
+        setTimeout(function() {
+          for (var i=volume, len=0; i>len; i--) {
+            setTimeout(function() {
+              console.log(`Fondu out : vol=${i}`)
+              player.setVolume(i);
+            }, 1000);
+          }
+          player.nextVideo();
+        }, (videoLenght - secondBeforeEnd) * 1000);
       }
     }
     </script>

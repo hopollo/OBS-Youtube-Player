@@ -10,7 +10,7 @@ exemple : obs-youtube-player.html?watch?v=XXXXX&list=XXXXX&volume=55&w=800&h=600
   **h:** Height of the video player : &height=VALUE (default is 300)\
   **hide:** Hide the video player : &hide=TRUE|FALSE (default is False)\
   **loop:** Loop video/playlist when finished : &loop=TRUE|FALSE (default is True)\
-  **random:** Randomise next song on playlist : &random=TRUE|FALSE (default is True)
+  **random:** Randomise next song on playlist : &random=TRUE|FALSE (default is True)\
   **fondu:** Enable the volume "fondu" on song start & end : &fondu=TRUE|FALSE (default is True)
 
 ## Built-in features by defaults :

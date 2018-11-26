@@ -21,19 +21,17 @@
       function info(txt) { return document.querySelector('#info').innerHTML = txt; }
 
       var url = new URL(window.location.href);
-      console.log('url :' + url);
       var songID = url.searchParams.get('watch?v');
       var listID = url.searchParams.get('list');
       var volume = url.searchParams.get('volume') || 45;
       var width = url.searchParams.get('w') || 534;
       var height = url.searchParams.get('h') || 300;
       var random = url.searchParams.get('random') || true;
-      var random = url.searchParams.get('random') || true;
       var loop = url.searchParams.get('loop') || true;
       var fondu = url.searchParams.get('fondu') || true;
 
-      var hideVideo = false || url.searchParams.get('hide');
-      if (hideVideo) { document.querySelector('#player').style.display = 'none'; }
+      hide = url.searchParams.get('hide') || false;
+      if (hide) { document.querySelector('#player').style.display = 'none'; }
 
       console.log(`insert : video = ${songID} | list = ${listID}`);
 
@@ -88,17 +86,9 @@
             switch(event.data){
               case -1:  // Not started
                 info('Unable to start playing, the video might be unaivailable or double-check the link you just entered');
-                var done = false;
-                () => {
-                  if (!done) {
-                    done = true;
-                    player.nextVideo();
-                  }
-                }
                 break;
               case 0:   // Stopped
                 console.log('Stopped');
-                player.nextVideo()
                 onAir();
                 break;
               case 1:   // Playing
@@ -112,60 +102,62 @@
                 break;
               case 3:
                 console.log("Loading...");
-                onAir();
                 break;
               case 5:   // In queue
-                console.log('In queue...');
+                console.log('Queued...');
                 onAir();
-                break
+                break;
               default:
                 console.log("default Play");
-                onAir();
+                onAir();              
             }
           }
         }
       });
 
       function onAir() {
-        if (loop) {
-          console.log('Loop playlist activated')
-          var loop = player.setLoop(true);
-        }
-        if (random) {
-          console.log('Randomize video activated')
-          var shuffle = player.setShuffle(true);
-        }
-        var state = player.playVideo();
-        console.log(`On air`);
+        console.log(`On air : volume=${volume}, random=${random}, loop=${loop}, h=${height}, w=${width}, hide=${hide}`);
+        player.setShuffle(random);
+        player.setLoop(loop);
+        player.playVideo();
+        /*
         if (fondu) {
-          fondu()
+          player.setVolume(0);
+          fondu();
         }
+        */
       }
 
       function fondu() {
         console.log("fondu")
-        var videoLenght = Math.round(player.getDuration()) * 60;
-        var currentVideoTime = Math.round(player.getCurrentTime());
-        var secondBeforeEnd = 5;
+        //ISSUE : While loading video youtube sometimes pass by the playing state even if not;
+        //TODO (HoPollo) : Find a way to kill any false-positiv intervals for fonduIn to avoid double fondu at the same time
+        //                  with differents values (makes the sound 'flickering??' (grisillements)))
+        var videoLenght = player.getDuration();
+        var i = 0;
 
-        for (var i=0, len=volume; i<len; i++) {
-          setTimeout(function() {
-            console.log(`Fondu in : vol=${i}`)
-            player.setVolume(i);
-          }, 1000);
-        }
+        var fonduUp = setInterval(function() {
+          console.log(`vol${i}/${volume}`)
+          player.setVolume(i);
+          i++;
+          if (i == volume) {
+            window.clearInterval(fonduUp);
+          }
+        }, 200);
 
         setTimeout(function() {
-          for (var i=volume, len=0; i>len; i--) {
-            setTimeout(function() {
-              console.log(`Fondu out : vol=${i}`)
-              player.setVolume(i);
-            }, 1000);
-          }
-          player.nextVideo();
-        }, (videoLenght - secondBeforeEnd) * 1000);
+          console.log('début fondu de fin');
+          var fonduDown = setInterval(function() {
+            console.log(`vol${volume}`)
+            volume = volume - 1;
+            player.setVolume(volume);
+            if (volume = 0) {
+              window.clearInterval(fonduDown);
+            }
+          }, 200);
+        }, (videoLenght - 5) * 1000);
       }
     }
-    </script>
+    </script> 
   </body>
 </html>

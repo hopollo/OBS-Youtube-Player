@@ -29,11 +29,12 @@
       var random = url.searchParams.get('random') || true;
       var loop = url.searchParams.get('loop') || true;
       var fondu = url.searchParams.get('fondu') || true;
-
-      hide = url.searchParams.get('hide') || false;
+      var debugMode = url.searchParams.get('debug') || false;
+      function debug(msg) {if (debugMode) {console.log(msg); }}
+      var hide = url.searchParams.get('hide') || false;
       if (hide) { document.querySelector('#player').style.display = 'none'; }
 
-      console.log(`insert : video = ${songID} | list = ${listID}`);
+      debug(`insert : video = ${songID} | list = ${listID}`);
 
       function onYouTubeIframeAPIReady() {
         var player = new YT.Player('player', {
@@ -54,16 +55,8 @@
 
         events: {
           'onReady': function() {
-            // Get/Set volume params
-            if (volume !== null) {
-              player.setVolume(volume);
-            } else {
-              info(`Volume not specified, default (${volume}%) is applied, add "&volume=20" at the end of the link to change it.`);
-              player.setVolume(volume);
-            }
-            // Get video type
             if (songID != null && listID != null) {
-              console.log('Choosen video first, songs inside list will be read after')
+              debug('Choosen video first, songs inside list will be read after')
               player.cueVideoById(songID);
               player.cuePlaylist({
                 listType: 'playlist',
@@ -71,14 +64,14 @@
               });
             }
             if (listID != null && songID == null) {
-              console.log('list only detected')
+              debug('list only detected')
               player.cuePlaylist({
                 listType: 'playlist',
                 list: listID
               });
             }
             if (songID != null && listID == null) {
-              console.log('Song only detected')
+              debug('Song only detected')
               player.cueVideoById(songID);
             }
           },
@@ -87,34 +80,34 @@
               case -1:  // Not started
                 info('Unable to start playing, the video might be unaivailable or double-check the link you just entered');
                 setTimeout(()=> {
-                  if(Math.round(player.getCurrentTime()) < 1 ) { 
-                    player.nextVideo();
+                  if(Math.round(player.getCurrentTime()) < 1) { 
+                    return player.nextVideo();
                   }
                 }, 3500);
                 break;
               case 0:   // Stopped
-                console.log('Stopped');
+                debug('Stopped');
                 onAir();
                 break;
               case 1:   // Playing
                 document.querySelector('#info').innerHTML = '';
-                console.log('Playing... ');
+                debug('Playing... ');
                 onAir();
                 break;
               case 2:   // Pause
-                console.log('Paused...');
+                debug('Paused...');
                 onAir();
                 break;
               case 3:
-                console.log("Loading...");
+                debug("Loading...");
                 onAir();
                 break;
               case 5:   // In queue
-                console.log('Queued...');
+                debug('Queued...');
                 onAir();
                 break;
               default:
-                console.log("default Play");
+                debug("default Play");
                 onAir();              
             }
           }
@@ -122,48 +115,50 @@
       });
 
       function onAir() {
-        console.log(`On air : volume=${volume}, random=${random}, loop=${loop}, h=${height}, w=${width}, hide=${hide}`);
+        debug(`On air : volume=${volume}, random=${random}, loop=${loop}, h=${height}, w=${width}, hide=${hide}`);
         player.setShuffle(random);
         player.setLoop(loop);
         player.playVideo();
-        /*
         if (fondu) {
           player.setVolume(0);
           fondu();
+        } else {
+          player.setVolume(volume);
         }
-        */
       }
 
       function fondu() {
-        //console.log("fondu")
         var isPlaying = player.getCurrentTime();
         var videoLenght = player.getDuration();
         var i = 0;
         window.clearInterval(fonduUp); // Extra prevention
         if (isPlaying != 0) {
-          var fonduUp = setInterval(function() {
-            //console.log(`vol${i}/${volume}`)
+          var fonduUp = setInterval(() => {
             player.setVolume(i);
             i++;
+            debug(`fonduUp : vol${i}/${volume}`)
             if (i == volume) {
               window.clearInterval(fonduUp);
             }
           }, 200);
         }
-
-        setTimeout(function() {
-          //console.log('début fondu de fin');
-          var fonduDown = setInterval(function() {
-            //console.log(`vol${volume}`)
-            volume = volume - 1;
-            player.setVolume(volume);
-            if (volume = 0) {
-              window.clearInterval(fonduDown);
-            }
-          }, 200);
+        
+        setTimeout(() => {
+          if (i == volume) {
+            debug('début fondu de fin');
+            console.log(`volume actuel:${i}`);
+            var fonduDown = setInterval(() => {
+              i--;
+              player.setVolume(i);
+              console.log(`fonduDown vol${i}`);
+              if (i == 0) {
+                window.clearInterval(fonduDown);
+              }
+            }, 200);
+          }
         }, (videoLenght - 5) * 1000);
       }
     }
-    </script> 
+    </script>
   </body>
 </html>

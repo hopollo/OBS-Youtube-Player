@@ -14,7 +14,7 @@ exemple : obs-youtube-player.html?watch?v=XXXXX&list=XXXXX&volume=55&w=800&h=600
   **fondu:** Enable the volume "fondu" on song start & end : &fondu=true|false (default is true)\
   **debug:** Enable debug mode & show info on console : &debug=true|false (default is false)
 
-## Built-in features by defaults :
+## Built-in features by default :
   autoplay = enabled, 
   Video controls (play,next, etc..) = hidden, 
   Fullscreen button = hidden, 

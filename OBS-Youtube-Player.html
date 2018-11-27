@@ -21,6 +21,10 @@
       function info(txt) { return document.querySelector('#info').innerHTML = txt; }
 
       var url = new URL(window.location.href);
+      //var str = window.location.href.split('.html')[0];
+      //window.history.replaceState(null, null, url+"/");
+
+      
       var songID = url.searchParams.get('watch?v');
       var listID = url.searchParams.get('list');
       var volume = url.searchParams.get('volume') || 45;
@@ -33,7 +37,6 @@
       function debug(msg) {if (debugMode) {console.log(msg); }}
       var hide = url.searchParams.get('hide') || false;
       if (hide) { document.querySelector('#player').style.display = 'none'; }
-
       debug(`insert : video = ${songID} | list = ${listID}`);
 
       function onYouTubeIframeAPIReady() {
@@ -57,11 +60,11 @@
           'onReady': function() {
             if (songID != null && listID != null) {
               debug('Choosen video first, songs inside list will be read after')
-              player.cueVideoById(songID);
               player.cuePlaylist({
                 listType: 'playlist',
                 list: listID
               });
+              player.cueVideoById(songID);
             }
             if (listID != null && songID == null) {
               debug('list only detected')
@@ -78,12 +81,12 @@
           'onStateChange': function (event) {
             switch(event.data){
               case -1:  // Not started
-                info('Unable to start playing, the video might be unaivailable or double-check the link you just entered');
+                info('Unable to start playing, the video might be unavailable or double-check the link you just entered');
                 setTimeout(()=> {
                   if(Math.round(player.getCurrentTime()) < 1) { 
                     return player.nextVideo();
                   }
-                }, 3500);
+                }, 4000);
                 break;
               case 0:   // Stopped
                 debug('Stopped');

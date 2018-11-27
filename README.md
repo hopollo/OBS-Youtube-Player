@@ -15,11 +15,12 @@ exemple : obs-youtube-player.html?watch?v=XXXXX&list=XXXXX&volume=55&w=800&h=600
   **debug:** Enable debug mode & show info on console : &debug=true|false (default is false)
 
 ## Built-in features by defaults :
-  autoplay = enabled,
-  Video controls (play,nex, etc..) = hidden,
-  Fullscreen button = hidden,
-  Video info = hidden,
-  Loop mode = enabled,
-  Video annotation = disabled,
+  autoplay = enabled, 
+  Video controls (play,next, etc..) = hidden, 
+  Fullscreen button = hidden, 
+  Video info = hidden, 
+  Loop mode = enabled, 
+  Randomize = enabled, 
+  Video annotation = disabled, 
   and more....
   

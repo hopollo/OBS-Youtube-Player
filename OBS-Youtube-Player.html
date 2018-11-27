@@ -146,11 +146,10 @@
         setTimeout(() => {
           if (i == volume) {
             debug('début fondu de fin');
-            console.log(`volume actuel:${i}`);
             var fonduDown = setInterval(() => {
               i--;
               player.setVolume(i);
-              console.log(`fonduDown vol${i}`);
+              debug(`fonduDown : vol${i}`);
               if (i == 0) {
                 window.clearInterval(fonduDown);
               }

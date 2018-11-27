@@ -11,7 +11,7 @@ exemple : obs-youtube-player.html?watch?v=XXXXX&list=XXXXX&volume=55&w=800&h=600
   **hide:** Hide the video player : &hide=true|false (default is False)\
   **loop:** Loop video/playlist when finished : &loop=true|false (default is true)\
   **random:** Randomise next song on playlist : &random=true|false (default is true)\
-  **fondu:** Enable the volume "fondu" on song start & end : &fondu=true|false (default is true)
+  **fondu:** Enable the volume "fondu" on song start & end : &fondu=true|false (default is true)\
   **debug:** Enable debug mode & show info on console : &debug=true|false (default is false)
 
 ## Built-in features by defaults :

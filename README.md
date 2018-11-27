@@ -8,9 +8,9 @@ exemple : obs-youtube-player.html?watch?v=XXXXX&list=XXXXX&volume=55&w=800&h=600
   **volume :** Volume of the video player : &volume=VALUE (0 to 100, default is 45)\
   **w:** Width of the video player : &width=VALUE (default is 535) \
   **h:** Height of the video player : &height=VALUE (default is 300)\
-  **hide:** Hide the video player : &hide=true|false (default is False)\
+  **hide:** Hide the video player : &hide=true|false (default is false)\
   **loop:** Loop video/playlist when finished : &loop=true|false (default is true)\
-  **random:** Randomise next song on playlist : &random=true|false (default is true)\
+  **random:** Randomize next song on playlist : &random=true|false (default is true)\
   **fondu:** Enable the volume "fondu" on song start & end : &fondu=true|false (default is true)\
   **debug:** Enable debug mode & show info on console : &debug=true|false (default is false)
 

@@ -24,7 +24,6 @@
       //var str = window.location.href.split('.html')[0];
       //window.history.replaceState(null, null, url+"/");
 
-      
       var songID = url.searchParams.get('watch?v');
       var listID = url.searchParams.get('list');
       var volume = url.searchParams.get('volume') || 45;
@@ -60,11 +59,11 @@
           'onReady': function() {
             if (songID != null && listID != null) {
               debug('Choosen video first, songs inside list will be read after')
+              player.cueVideoById(songID);
               player.cuePlaylist({
                 listType: 'playlist',
                 list: listID
               });
-              player.cueVideoById(songID);
             }
             if (listID != null && songID == null) {
               debug('list only detected')
@@ -122,12 +121,15 @@
         player.setShuffle(random);
         player.setLoop(loop);
         player.playVideo();
+        player.setVolume(volume);
+        /*
         if (fondu) {
           player.setVolume(0);
           fondu();
         } else {
           player.setVolume(volume);
         }
+        */
       }
 
       function fondu() {

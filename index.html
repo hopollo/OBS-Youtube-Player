@@ -52,7 +52,8 @@
           fs: 0,              // Hide the full screen button
           cc_load_policy: 0,  // Hide closed captions
           iv_load_policy: 3,  // Hide the Video Annotations
-          autohide: 1         // Hide video controls when playing
+          autohide: 1,        // Hide video controls when playing
+          enablejsapi: 1
         },
 
         events: {
@@ -80,12 +81,14 @@
           'onStateChange': function (event) {
             switch(event.data){
               case -1:  // Not started
-                info('Unable to start playing, the video might be unavailable or double-check the link you just entered');
-                setTimeout(()=> {
-                  if(Math.round(player.getCurrentTime()) < 1) { 
-                    return player.nextVideo();
+                debug('Unable to start playing, the video might be unavailable or double-check the link you just entered');
+                var done = false;
+                setTimeout(() => {
+                  if ( player.getCurrentTime() < 0 && !done) {
+                    debug(`Video skeeped, seems to not work`);
+                    player.nextVideo();
                   }
-                }, 4000);
+                }, 5000);
                 break;
               case 0:   // Stopped
                 debug('Stopped');
@@ -118,8 +121,15 @@
 
       function onAir() {
         debug(`On air : volume=${volume}, random=${random}, loop=${loop}, h=${height}, w=${width}, hide=${hide}`);
-        player.setShuffle(random);
-        player.setLoop(loop);
+
+        if (random == "true") {
+          debug(`Random mode : ${random}`);
+          player.setShuffle(true);
+        }
+        if (loop == "true") {
+          debug(`Loop mode : ${loop}`);
+          player.setLoop(true);
+        }
         player.playVideo();
         player.setVolume(volume);
         /*

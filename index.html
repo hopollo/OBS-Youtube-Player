@@ -86,9 +86,9 @@
             switch(event.data){
               case -1:  // Not started
                 debug('Unable to start playing, the video might be unavailable or double-check the link you just entered');
-                let done = false;
+                var done = false;
                 setTimeout(() => {
-                  if ( player.getCurrentTime() < 0 && !done) {
+                  if (player.getCurrentTime() < 0 && !done) {
                     debug(`Video skeeped, seems to not work`);
                     player.nextVideo();
                     done = true;
@@ -133,26 +133,20 @@
               Height => ${height}
               Width => ${width}
               HideVideo => ${hide}`);
-              
-        if (random === "false") { player.setShuffle(false); } else { player.setShuffle(true); }
-        if (loop === "false") { player.setLoop(false); } else { player.setLoop(true); }
+
+        (random === "false") ? player.setShuffle(false) : player.setShuffle(true);
+        (loop === "false") ? player.setLoop(false) : player.setLoop(true);
         
         player.playVideo();
         player.setVolume(volume);
-        /*
-        if (fondu) {
-          player.setVolume(0);
-          fondu();
-        } else {
-          player.setVolume(volume);
-        }
-        */
+
+        if (fondu) { player.setVolume(0); fondu(); }
       }
       
       function fondu() {
-        var isPlaying = player.getCurrentTime();
-        var videoLenght = player.getDuration();
-        var i = 0;
+        let isPlaying = player.getCurrentTime();
+        let videoLenght = player.getDuration();
+        let i = 0;
         window.clearInterval(fonduUp); // Extra prevention
         if (isPlaying != 0) {
           var fonduUp = setInterval(() => {
@@ -177,7 +171,7 @@
               }
             }, 200);
           }
-        }, (videoLenght - 5) * 1000);
+        }, (videoLenght - 3) * 1000);
       }
     }
     </script>

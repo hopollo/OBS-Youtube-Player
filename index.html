@@ -147,7 +147,7 @@
         let isPlaying = player.getCurrentTime();
         let videoLenght = player.getDuration();
         let i = 0;
-        window.clearInterval(fonduUp); // Extra prevention
+        
         if (isPlaying != 0) {
           var fonduUp = setInterval(() => {
             player.setVolume(i);

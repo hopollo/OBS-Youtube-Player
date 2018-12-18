@@ -20,26 +20,26 @@
     <script>
       function info(txt) { return document.querySelector('#info').innerHTML = txt; }
 
-      var url = new URL(window.location.href);
-      //var str = window.location.href.split('.html')[0];
-      //window.history.replaceState(null, null, url+"/");
+      const url = new URL(window.location.href);
 
-      var songID = url.searchParams.get('watch?v');
-      var listID = url.searchParams.get('list');
-      var volume = url.searchParams.get('volume') || 45;
-      var width = url.searchParams.get('w') || 534;
-      var height = url.searchParams.get('h') || 300;
-      var random = url.searchParams.get('random') || true;
-      var loop = url.searchParams.get('loop') || true;
-      var fondu = url.searchParams.get('fondu') || true;
-      var debugMode = url.searchParams.get('debug') || false;
+      let songID = url.searchParams.get('watch?v') || window.location.href.split('/')[window.location.href.split('/').length - 1].split('?')[0];
+      let listID = url.searchParams.get('list');
+      let volume = url.searchParams.get('volume') || 45;
+      let width = url.searchParams.get('w') || 534;
+      let height = url.searchParams.get('h') || 300;
+      let startSeconds = url.searchParams.get('t');
+      let index = url.searchParams.get('index');
+      let random = url.searchParams.get('random') || true;
+      let loop = url.searchParams.get('loop') || true;
+      let fondu = url.searchParams.get('fondu') || true;
+      let debugMode = url.searchParams.get('debug') || false;
       function debug(msg) {if (debugMode) {console.log(msg); }}
-      var hide = url.searchParams.get('hide') || false;
+      let hide = url.searchParams.get('hide') || false;
       if (hide) { document.querySelector('#player').style.display = 'none'; }
       debug(`insert : video = ${songID} | list = ${listID}`);
 
       function onYouTubeIframeAPIReady() {
-        var player = new YT.Player('player', {
+        let player = new YT.Player('player', {
         width: width,              
         height: height, 
 
@@ -48,6 +48,7 @@
           controls: 0,        // Show pause/play buttons in player
           showinfo: 0,        // Hide the video title
           modestbranding: 1,  // Hide the Youtube Logo
+          disablekb: 1,
           loop: 1,            // Run the video in a loop
           fs: 0,              // Hide the full screen button
           cc_load_policy: 0,  // Hide closed captions
@@ -75,6 +76,9 @@
             }
             if (songID != null && listID == null) {
               debug('Song only detected')
+              if (startSeconds > 0) { 
+                console.log(`Song will start at ${startSeconds}s`);
+              }
               player.cueVideoById(songID);
             }
           },
@@ -82,11 +86,12 @@
             switch(event.data){
               case -1:  // Not started
                 debug('Unable to start playing, the video might be unavailable or double-check the link you just entered');
-                var done = false;
+                let done = false;
                 setTimeout(() => {
                   if ( player.getCurrentTime() < 0 && !done) {
                     debug(`Video skeeped, seems to not work`);
                     player.nextVideo();
+                    done = true;
                   }
                 }, 5000);
                 break;
@@ -120,16 +125,18 @@
       });
 
       function onAir() {
-        debug(`On air : volume=${volume}, random=${random}, loop=${loop}, h=${height}, w=${width}, hide=${hide}`);
-
-        if (random == "true") {
-          debug(`Random mode : ${random}`);
-          player.setShuffle(true);
-        }
-        if (loop == "true") {
-          debug(`Loop mode : ${loop}`);
-          player.setLoop(true);
-        }
+        debug(`On air :
+              Start at => ${startSeconds}s
+              Volume => ${volume}
+              random => ${random}
+              loop   => ${loop}
+              Height => ${height}
+              Width => ${width}
+              HideVideo => ${hide}`);
+              
+        if (random === "false") { player.setShuffle(false); } else { player.setShuffle(true); }
+        if (loop === "false") { player.setLoop(false); } else { player.setLoop(true); }
+        
         player.playVideo();
         player.setVolume(volume);
         /*
@@ -141,7 +148,7 @@
         }
         */
       }
-
+      
       function fondu() {
         var isPlaying = player.getCurrentTime();
         var videoLenght = player.getDuration();

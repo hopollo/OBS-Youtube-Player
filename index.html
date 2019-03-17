@@ -133,9 +133,19 @@
               Height => ${height}
               Width => ${width}
               HideVideo => ${hide}`);
-
-        (random === "false") ? player.setShuffle(false) : player.setShuffle(true);
-        (loop === "false") ? player.setLoop(false) : player.setLoop(true);
+        
+        /*if (random === "false") {
+          console.log('Should play randomly');
+          player.nextVideo();
+          player.setShuffle(false); // NOT WORKING
+          //const selectedSong = Math.floor(Math.random() * (99 - 0)) + 0;
+          //console.log('SelectedSong : ' + selectedSong);
+          //player.playVideoAt(selectedSong);
+        }*/
+        
+        //if (loop === "true") {
+          player.setLoop(true);
+        //}
         
         player.playVideo();
         player.setVolume(volume);

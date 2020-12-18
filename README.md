@@ -1,7 +1,7 @@
 # OBS-Youtube-Player
-Designed for OBS Browser source to display/play a song/playlist fully automaticly with customs params.
+Designed for OBS Browser source to display/play a song/playlist fully automaticly with customs fixed params.
 
-## Usage : add ? at the end of the link and copy Youtube link at "watch?v=XXXXX" or "watch?v=XXXXX&list=XXXXX")
+## Usage : add ? at the end of the link and copy Youtube link from "watch?v=XXXXX" or "watch?v=XXXXX&list=XXXXX")
 exemple : https://obsyoutubeplayer.netlify.com/?watch?v=lSqnqSSXTUI&list=RDlSqnqSSXTUI&volume=10&random=true&loop=true
 
 ## Features :
@@ -11,7 +11,7 @@ exemple : https://obsyoutubeplayer.netlify.com/?watch?v=lSqnqSSXTUI&list=RDlSqnq
   **hide:** Hide the video player : &hide=true|false (default is false)\
   **loop:** Loop video/playlist when finished : &loop=true|false (default is true)\
   **random:** Randomize next song on playlist : &random=true|false (default is true)\
-  **fondu:** Enable the volume fade on song start & end : &fondu=true|false (default is true)\
+  **fade:** Enable the volume fade on song start & end : &fade=true|false (default is true)\
   **debug:** Enable debug mode & show info on console : &debug=true|false (default is false)
 
 ## Built-in features by default :
@@ -19,7 +19,8 @@ exemple : https://obsyoutubeplayer.netlify.com/?watch?v=lSqnqSSXTUI&list=RDlSqnq
   Video controls (play,next, etc..) = hidden, 
   Fullscreen button = hidden, 
   Video info = hidden, 
-  Loop mode = enabled, 
+  Loop mode = enabled,
+  Fade = enabled,
   Randomize = enabled, 
   Video annotation = disabled, 
   and more....

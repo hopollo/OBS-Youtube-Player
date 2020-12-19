@@ -28,7 +28,7 @@
 
       const url = new URL(window.location.href);
 
-      let songID = url.searchParams.get("watch");
+      let songID = url.searchParams.get("watch?v");
       let listID = url.searchParams.get("list");
       let volume = url.searchParams.get("volume") || 45;
       let width = url.searchParams.get("w") || 534;
@@ -57,7 +57,6 @@
             showinfo: 0, // Hide the video title
             modestbranding: 1, // Hide the Youtube Logo
             disablekb: 1, // Disable keyboard shortcuts
-            loop: 1, // Run the video in a loop
             fs: 0, // Hide the full screen button
             cc_load_policy: 0, // Hide closed captions
             iv_load_policy: 3, // Hide the Video Annotations
@@ -69,16 +68,27 @@
             onStateChange,
             //onPlaybackQualityChange, Not useful for now?
             onError,
-          },
+          }
         });
 
+        
         function onReady(event) {
+          // Enforcing defaults params
+          player.setVolume(volume);
+          player.getPlaybackRate(1);
+          (loop === 'true') ? player.setLoop(true) : player.setLoop(false);
+          (random === 'true') ? player.setShuffle(true) : player.setShuffle(false);
+
           if (songID && listID) {
             debug("Given first video/song, playlist comes after");
-            player.cueVideoById(songID);
-            player.cuePlaylist({
-              listType: "playlist",
-              list: listID,
+            player.cueVideoById({videoId: songID, startSeconds});
+
+            player.addEventListener("onStateChange", ({ data }) => {
+              if (data === 0) {
+                // Remark (HoPollo) : First video seems be played twice event without loop mode, quick fix is stopping and cue playlist to avoid that
+                player.stopVideo();
+                player.cuePlaylist({ list: listID });
+              }
             });
           }
 
@@ -113,9 +123,8 @@
               debug("Paused...");
               onAir();
               break;
-            case 3:
+            case 3: // Loading
               debug("Loading...");
-              onAir();
               break;
             case 5: // In queue
               debug("Queued...");
@@ -133,42 +142,29 @@
         }
 
         function onAir() {
-          debug(`On air :
-                Queue position => ${player.getPlaylistIndex() + 1}/${player.getPlaylist().length}
-                Start at       => ${(startSeconds) ? startSeconds : 0}s/${Math.round(Math.floor(player.getDuration()))}s
-                Volume         => ${volume}%
-                Fade           => ${fade}
-                Randomize      => ${random}
-                Loop           => ${loop}
-                Height         => ${height}px
-                Width          => ${width}px
-                HideVideo      => ${hide}`);
+          debug(`On air : ${player.playerInfo.videoData.title} by ${player.playerInfo.videoData.author}
+            Queue position => ${player.getPlaylistIndex() + 1}/${(player.getPlaylist()) ? player.getPlaylist().length : null}
+            Start at       => ${(startSeconds) ? startSeconds : 0}s/${Math.round(Math.floor(player.getDuration()))}s
+            Volume         => ${volume}%
+            Fade           => ${fade}
+            Randomize      => ${random}
+            Loop           => ${loop}
+            Height         => ${height}px
+            Width          => ${width}px
+            HideVideo      => ${hide}`);
+            
+            player.playVideo();
+            (fade === 'true') ? fading() : player.setVolume(volume);
+          }
 
-          /*if (random === 'false') {
-            console.log('Should play randomly');
-            player.nextVideo();
-            player.setShuffle(false); // NOT WORKING
-            //const selectedSong = Math.floor(Math.random() * (99 - 0)) + 0;
-            //console.log('SelectedSong : ' + selectedSong);
-            //player.playVideoAt(selectedSong);
-          }*/
-
-          (loop === 'true') ? player.setLoop(true) : player.setLoop(false);
-          
-          player.setVolume(volume);
-          player.playVideo();
-          
-          // Placement here is important to cut volume from given value and going up slowly
-          if (fade === 'true') fading();
-        }
-
+        let fadeAlreadyDone = false;
         function fading() {
           player.setVolume(0);
-          const isPlaying = player.getCurrentTime();
+          const isPlaying = player.getPlayerState();
           const videoLenght = player.getDuration();
           let i = 0;
 
-          if (isPlaying > 0) {
+          if (isPlaying === 1 && !fadeAlreadyDone) {
             const fadeUp = setInterval(() => {
               player.setVolume(i++);
               debug(`fadeUp (vol%) : ${i}/${volume}`);

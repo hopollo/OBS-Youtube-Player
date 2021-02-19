@@ -2,7 +2,7 @@
 Designed for OBS Browser source to display/play a song/playlist fully automaticly with customs fixed params.
 
 ## Usage : add ? at the end of the link and copy Youtube link from "watch?v=XXXXX" or "watch?v=XXXXX&list=XXXXX")
-exemple : https://obsyoutubeplayer.netlify.com/?watch?v=lSqnqSSXTUI&list=RDlSqnqSSXTUI&volume=10&random=true&loop=true
+exemple : https://hopollo.github.io/OBS-Youtube-Player/?watch?v=lSqnqSSXTUI&list=RDlSqnqSSXTUI&volume=10&random=true&loop=true
 
 ## Features :
   **volume :** Volume of the video player : &volume=VALUE (0 to 100, default is 45)\

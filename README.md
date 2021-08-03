@@ -4,6 +4,8 @@ Designed for OBS Browser source to display/play a song/playlist fully automaticl
 ## Usage : add ? at the end of the link and copy Youtube link from "watch?v=XXXXX" or "watch?v=XXXXX&list=XXXXX")
 exemple : https://hopollo.github.io/OBS-Youtube-Player/?watch?v=lSqnqSSXTUI&list=RDlSqnqSSXTUI&volume=10&random=true&loop=true
 
+## Tutorial (video with subtitles instructions): https://youtu.be/y8VerA88A6U
+
 ## Features :
   **volume :** Volume of the video player : &volume=VALUE (0 to 100, default is 45)\
   **w:** Width of the video player : &width=VALUE (default is 535) \

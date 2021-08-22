@@ -33,6 +33,8 @@
       let volume = url.searchParams.get("volume") || 45;
       let width = url.searchParams.get("w") || 534;
       let height = url.searchParams.get("h") || 300;
+      let quality = url.searchParams.get("quality") || 'default';
+      let forceQuality = url.searchParams.get('forcequality') || false;
       let startSeconds = url.searchParams.get("t");
       let index = url.searchParams.get("index") || 0;
       let random = url.searchParams.get("random") || true;
@@ -66,7 +68,7 @@
           events: {
             onReady,
             onStateChange,
-            //onPlaybackQualityChange, Not useful for now?
+            onPlaybackQualityChange,
             onError,
           }
         });
@@ -75,8 +77,13 @@
         function onReady(event) {
           // Enforcing defaults params
           player.setVolume(volume);
-          player.getPlaybackRate(1);
+          // Apply choosen video quality
+          player.setPlaybackQuality(quality);
+          // Enforce 1x speed, just in case
+          player.setPlaybackRate(1);
+          // Toggle looping
           (loop === 'true') ? player.setLoop(true) : player.setLoop(false);
+          // Toogle randomize
           (random === 'true') ? player.setShuffle(true) : player.setShuffle(false);
 
           if (songID && listID) {
@@ -136,6 +143,11 @@
           }
         }
 
+        function onPlaybackQualityChange() {
+          console.log(`Video quality changed by Youtube${forceQuality ? ', trying to force it back' : ''}`);
+          forceQuality ? player.setPlaybackQuality(quality) : null;
+        }
+
         function onError() {
           console.log("Error detected, video skipped");
           player.nextVideo();
@@ -146,6 +158,7 @@
             Queue position => ${player.getPlaylistIndex() + 1}/${(player.getPlaylist()) ? player.getPlaylist().length : null}
             Start at       => ${(startSeconds) ? startSeconds : 0}s/${Math.round(Math.floor(player.getDuration()))}s
             Volume         => ${volume}%
+            Quality        => ${player.getPlaybackQuality()}/${quality} (forced: ${forceQuality})
             Fade           => ${fade}
             Randomize      => ${random}
             Loop           => ${loop}

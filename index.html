@@ -33,8 +33,8 @@
       let volume = url.searchParams.get("volume") || 45;
       let width = url.searchParams.get("w") || 534;
       let height = url.searchParams.get("h") || 300;
-      let quality = url.searchParams.get("quality") || 'default';
-      let forceQuality = url.searchParams.get('forcequality') || false;
+      let quality = url.searchParams.get("quality") || "default";
+      let forceQuality = url.searchParams.get("forcequality") || false;
       let startSeconds = url.searchParams.get("t");
       let index = url.searchParams.get("index") || 0;
       let random = url.searchParams.get("random") || true;
@@ -70,10 +70,9 @@
             onStateChange,
             onPlaybackQualityChange,
             onError,
-          }
+          },
         });
 
-        
         function onReady(event) {
           // Enforcing defaults params
           player.setVolume(volume);
@@ -82,13 +81,11 @@
           // Enforce 1x speed, just in case
           player.setPlaybackRate(1);
           // Toggle looping
-          (loop === 'true') ? player.setLoop(true) : player.setLoop(false);
-          // Toogle randomize
-          (random === 'true') ? player.setShuffle(true) : player.setShuffle(false);
+          loop === "true" && player.setLoop(loop);
 
           if (songID && listID) {
             debug("Given first video/song, playlist comes after");
-            player.cueVideoById({videoId: songID, startSeconds});
+            player.cueVideoById({ videoId: songID, startSeconds });
 
             player.addEventListener("onStateChange", ({ data }) => {
               if (data === 0) {
@@ -101,7 +98,7 @@
 
           if (!songID && listID) {
             debug("Playlist only detected");
-            // Remark: (HoPollo) : YT playlists seems to be flushed by default, event starting witth de same index, the video is different
+            // Remark: (HoPollo) : YT playlists seems to be flushed by default, event starting with de same index, the video is different
             player.loadPlaylist({ list: listID, index, startSeconds });
           }
 
@@ -114,8 +111,8 @@
         function onStateChange(event) {
           switch (event.data) {
             case -1: // Not started
-              // Kinda useless state ?
-              //debug("Not started");              
+              shuffleSongs();
+              //debug("Not started");
               break;
             case 0: // Stopped
               debug("Stopped");
@@ -143,32 +140,54 @@
           }
         }
 
+        // Toggle Shuffle();
+        let randomized = false;
+        function shuffleSongs() {
+          if (!randomized) {
+            player.stopVideo();
+            random === "true" && player.setShuffle(true);
+            player.nextVideo();
+
+            randomized = true;
+          }
+        }
+
         function onPlaybackQualityChange() {
-          console.log(`Video quality changed by Youtube${forceQuality ? ', trying to force it back' : ''}`);
-          forceQuality ? player.setPlaybackQuality(quality) : null;
+          debug(
+            `Video quality changed by Youtube${
+              forceQuality ? ", trying to force it back" : ""
+            }`
+          );
+          forceQuality && player.setPlaybackQuality(quality);
         }
 
         function onError() {
-          console.log("Error detected, video skipped");
+          console.error("Error detected, video skipped");
           player.nextVideo();
         }
 
         function onAir() {
-          debug(`On air : ${player.playerInfo.videoData.title} by ${player.playerInfo.videoData.author}
-            Queue position => ${player.getPlaylistIndex() + 1}/${(player.getPlaylist()) ? player.getPlaylist().length : null}
-            Start at       => ${(startSeconds) ? startSeconds : 0}s/${Math.round(Math.floor(player.getDuration()))}s
-            Volume         => ${volume}%
-            Quality        => ${player.getPlaybackQuality()}/${quality} (forced: ${forceQuality})
-            Fade           => ${fade}
-            Randomize      => ${random}
-            Loop           => ${loop}
-            Height         => ${height}px
-            Width          => ${width}px
-            HideVideo      => ${hide}`);
-            
-            player.playVideo();
-            (fade === 'true') ? fading() : player.setVolume(volume);
+          debug(`On air : ${player.playerInfo.videoData.title} by ${
+            player.playerInfo.videoData.author
           }
+          Queue position => ${player.getPlaylistIndex() + 1}/${
+            player.getPlaylist() ? player.getPlaylist().length : null
+          }
+          Start at       => ${startSeconds ? startSeconds : 0}s/${Math.round(
+            Math.floor(player.getDuration())
+          )}s
+          Volume         => ${volume}%
+          Quality        => ${player.getPlaybackQuality()}/${quality} (forced: ${forceQuality})
+          Fade           => ${fade}
+          Randomize      => ${random}
+          Loop           => ${loop}
+          Height         => ${height}px
+          Width          => ${width}px
+          HideVideo      => ${hide}`);
+
+          player.playVideo();
+          fade === "true" ? fading() : player.setVolume(volume);
+        }
 
         let fadeAlreadyDone = false;
         function fading() {
@@ -181,7 +200,7 @@
             const fadeUp = setInterval(() => {
               player.setVolume(i++);
               debug(`fadeUp (vol%) : ${i}/${volume}`);
-              (i == parseInt(volume)) ? window.clearInterval(fadeUp) : null;
+              i == parseInt(volume) && window.clearInterval(fadeUp);
             }, 250);
           }
 

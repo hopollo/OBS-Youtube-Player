@@ -81,7 +81,7 @@
           // Enforce 1x speed, just in case
           player.setPlaybackRate(1);
           // Toggle looping
-          loop === "true" && player.setLoop(loop);
+          loop === "true" && player.setLoop(true);
 
           if (songID && listID) {
             debug("Given first video/song, playlist comes after");

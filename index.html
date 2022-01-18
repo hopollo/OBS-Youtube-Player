@@ -85,7 +85,7 @@
 
           if (songID && listID) {
             debug("Given first video/song, playlist comes after");
-            player.cueVideoById({ videoId: songID, startSeconds });
+            player.cueVideoById({ videoId: songID });
 
             player.addEventListener("onStateChange", ({ data }) => {
               if (data === 0) {
@@ -99,7 +99,7 @@
           if (!songID && listID) {
             debug("Playlist only detected");
             // Remark: (HoPollo) : YT playlists seems to be flushed by default, event starting with de same index, the video is different
-            player.loadPlaylist({ list: listID, index, startSeconds });
+            player.loadPlaylist({ list: listID, index});
           }
 
           if (songID && !listID) {
@@ -129,6 +129,7 @@
               break;
             case 3: // Loading
               debug("Loading...");
+              startSeconds > 0 && player.seekTo(startSeconds);
               break;
             case 5: // In queue
               debug("Queued...");
@@ -159,8 +160,6 @@
             }`
           );
           forceQuality && player.setPlaybackQuality(quality);
-
-          startSeconds && player.seekTo(startSeconds);
         }
 
         function onError() {

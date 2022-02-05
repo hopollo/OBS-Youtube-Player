@@ -38,6 +38,7 @@
       let startSeconds = url.searchParams.get("t") || 0;
       let index = url.searchParams.get("index") || 0;
       let random = url.searchParams.get("random") || true;
+      let randomIndexMax = url.searchParams.get("randomIndexMax") || 10;
       let loop = url.searchParams.get("loop") || true;
       let fade = url.searchParams.get("fade") || true;
       let debugMode = url.searchParams.get("debug") || false;
@@ -99,7 +100,7 @@
           if (!songID && listID) {
             debug("Playlist only detected");
             if(random && !index){
-              index=Math.floor(Math.random() * 10);
+              index=Math.floor(Math.random() * randomIndexMax);
             }
             player.loadPlaylist({ list: listID, index});
           }

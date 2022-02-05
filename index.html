@@ -98,7 +98,9 @@
 
           if (!songID && listID) {
             debug("Playlist only detected");
-            // Remark: (HoPollo) : YT playlists seems to be flushed by default, event starting with de same index, the video is different
+            if(random && !index){
+              index=Math.floor(Math.random() * 10);
+            }
             player.loadPlaylist({ list: listID, index});
           }
 

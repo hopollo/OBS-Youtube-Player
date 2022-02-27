@@ -30,6 +30,7 @@
 
       let songID = url.searchParams.get("watch?v");
       let listID = url.searchParams.get("list");
+      let title = url.searchParams.get("title") || false;
       let volume = url.searchParams.get("volume") || 45;
       let width = url.searchParams.get("w") || 534;
       let height = url.searchParams.get("h") || 300;
@@ -99,7 +100,8 @@
           if (!songID && listID) {
             debug("Playlist only detected");
             // Remark: (HoPollo) : YT playlists seems to be flushed by default, event starting with de same index, the video is different
-            player.loadPlaylist({ list: listID, index});
+
+            player.loadPlaylist({ list: listID, index });
           }
 
           if (songID && !listID) {
@@ -185,6 +187,8 @@
           Height         => ${height}px
           Width          => ${width}px
           HideVideo      => ${hide}`);
+
+          if (title) document.getElementById('info').innerText = `${player.playerInfo.videoData.title} by ${player.playerInfo.videoData.author}`;
 
           player.playVideo();
 

@@ -22,6 +22,8 @@ exemple : https://hopollo.github.io/OBS-Youtube-Player/?watch?v=lSqnqSSXTUI&list
  **title:** Show the current song (name + author) : &title=true|false (default is false)\
  **debug:** Enable debug mode & show info on console : &debug=true|false (default is false)
 
+Song title/author's display is fully customizable with CSS rules from OBS directly with `#songTitle` and `#songAuthor`
+
 ## Built-in features by default :
 
 autoplay = enabled,

@@ -188,7 +188,7 @@
           Width          => ${width}px
           HideVideo      => ${hide}`);
 
-          if (title) document.getElementById('info').innerText = `${player.playerInfo.videoData.title} by ${player.playerInfo.videoData.author}`;
+          if (title) document.getElementById('info').innerHTML = `<span id="songTitle">${player.playerInfo.videoData.title}</span> <span id="songAuthor">${player.playerInfo.videoData.author}</span>`;
 
           player.playVideo();
 

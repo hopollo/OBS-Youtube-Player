@@ -32,15 +32,16 @@
       let listID = url.searchParams.get("list");
       let title = url.searchParams.get("title") || false;
       let volume = url.searchParams.get("volume") || 45;
-      let width = url.searchParams.get("w") || 534;
+      let 
+      = url.searchParams.get("w") || 534;
       let height = url.searchParams.get("h") || 300;
       let quality = url.searchParams.get("quality") || "default";
       let forceQuality = url.searchParams.get("forcequality") || false;
       let startSeconds = url.searchParams.get("t") || 0;
       let index = url.searchParams.get("index") || 0;
-      let random = url.searchParams.get("random") || true;
-      let loop = url.searchParams.get("loop") || true;
-      let fade = url.searchParams.get("fade") || true;
+      let random = url.searchParams.get("random") !== "false";
+      let loop = url.searchParams.get("loop") !== "false";
+      let fade = url.searchParams.get("fade") !== "false";
       let debugMode = url.searchParams.get("debug") || false;
       let hide = url.searchParams.get("hide") || false;
 
@@ -82,7 +83,7 @@
           // Enforce 1x speed, just in case
           player.setPlaybackRate(1);
           // Toggle looping
-          loop === "true" && player.setLoop(true);
+          player.setLoop(loop);
 
           if (songID && listID) {
             debug("Given first video/song, playlist comes after");
@@ -148,7 +149,9 @@
         function shuffleSongs() {
           if (!randomized) {
             player.stopVideo();
-            random === "true" && player.setShuffle(true);
+            if (random) {
+              player.setShuffle(true);
+            }
             player.nextVideo();
 
             randomized = true;
@@ -192,7 +195,11 @@
 
           player.playVideo();
 
-          fade === "true" ? fading() : player.setVolume(volume);
+          if (fade) {
+            fading();
+          } else {
+            player.setVolume(volume);
+          }
         }
 
         let fadeAlreadyDone = false;

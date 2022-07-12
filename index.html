@@ -118,7 +118,7 @@
               break;
             case 0: // Stopped
               debug("Stopped");
-              onAir();
+              loop && onAir();
               break;
             case 1: // Playing
               document.querySelector("#info").innerHTML = "";

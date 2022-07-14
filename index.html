@@ -30,19 +30,19 @@
 
       let songID = url.searchParams.get("watch?v");
       let listID = url.searchParams.get("list");
-      let title = url.searchParams.get("title") || false;
+      let title = url.searchParams.get("title") == "true" ? true : false;
       let volume = url.searchParams.get("volume") || 45;
       let width = url.searchParams.get("w") || 534;
       let height = url.searchParams.get("h") || 300;
       let quality = url.searchParams.get("quality") || "default";
-      let forceQuality = url.searchParams.get("forcequality") || false;
+      let forceQuality = url.searchParams.get("forcequality") == "true" ? true : false;
       let startSeconds = url.searchParams.get("t") || 0;
       let index = url.searchParams.get("index") || 0;
-      let random = url.searchParams.get("random") !== "false";
-      let loop = url.searchParams.get("loop") !== "false";
-      let fade = url.searchParams.get("fade") !== "false";
-      let debugMode = url.searchParams.get("debug") || false;
-      let hide = url.searchParams.get("hide") || false;
+      let random = url.searchParams.get("random") == "true" ? true : false;
+      let loop = url.searchParams.get("loop") == "false" ? false : true;
+      let fade = url.searchParams.get("fade") == "true" ? true : false;
+      let debugMode = url.searchParams.get("debug") == "true" ? true : false;
+      let hide = url.searchParams.get("hide") == "true" ? true : false;
 
       // Hide/Show the title area
       hide ? (document.querySelector("#player").style.display = "none") : null;
@@ -118,7 +118,7 @@
               break;
             case 0: // Stopped
               debug("Stopped");
-              onAir();
+              loop && onAir();
               break;
             case 1: // Playing
               document.querySelector("#info").innerHTML = "";

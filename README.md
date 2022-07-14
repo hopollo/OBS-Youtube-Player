@@ -14,6 +14,7 @@ exemple : https://hopollo.github.io/OBS-Youtube-Player/?watch?v=lSqnqSSXTUI&list
  **w:** Width of the video player : &width=VALUE (default is 535) \
  **h:** Height of the video player : &height=VALUE (default is 300)\
  **hide:** Hide the video player : &hide=true|false (default is false)\
+ **hideWhenStopped** Hide everything when video is stopped : &hideWhenStopped=true|false (default is false)
  **quality** Video quality of the player : &quality=small|medium|large|hd720|hd1080|highres|default (default is default)\
  **forcequality** Enforce choosen video quality : forcequality=true|false (default is false)\
  **loop:** Loop video/playlist when finished : &loop=true|false (default is true)\
@@ -31,7 +32,7 @@ Video controls (play,next, etc..) = hidden,
 Fullscreen button = hidden,
 Video info = hidden,
 Loop mode = enabled,
-Fade = enabled,
+Fade = disabled,
 Randomize = enabled,
 Video annotation = disabled,
 and more....

@@ -12,8 +12,10 @@
     </style>
   </head>
   <body>
-    <div id="info"></div>
-    <div id="player"></div>
+    <div id="container">
+      <div id="info"></div>
+      <div id="player"></div>
+    </div>
 
     <script async src="https://www.youtube.com/iframe_api"></script>
 
@@ -43,6 +45,7 @@
       let fade = url.searchParams.get("fade") == "true" ? true : false;
       let debugMode = url.searchParams.get("debug") == "true" ? true : false;
       let hide = url.searchParams.get("hide") == "true" ? true : false;
+      let hideWhenStopped = url.searchParams.get('hideWhenStopped') == "true" ? true : false;
 
       // Hide/Show the title area
       hide ? (document.querySelector("#player").style.display = "none") : null;
@@ -119,10 +122,12 @@
             case 0: // Stopped
               debug("Stopped");
               loop && onAir();
+              hideWhenStopped && (document.querySelector("#container").style.display = "none");
               break;
             case 1: // Playing
               document.querySelector("#info").innerHTML = "";
               debug("Playing... ");
+              hideWhenStopped && (document.querySelector("#container").style.display = "block");
               onAir();
               break;
             case 2: // Pause
@@ -175,20 +180,21 @@
           debug(`On air : ${player.playerInfo.videoData.title} by ${
             player.playerInfo.videoData.author
           }
-          Queue position => ${player.getPlaylistIndex() + 1}/${
-            player.getPlaylist() ? player.getPlaylist().length : null
+          Queue position  => ${player.getPlaylistIndex() + 1}/${
+            player.getPlaylist() ? player.getPlaylist().length : "null"
           }
-          Start at       => ${startSeconds}s/${Math.round(
+          Start at        => ${startSeconds}s/${Math.round(
             Math.floor(player.getDuration())
           )}s
-          Volume         => ${volume}%
-          Quality        => ${player.getPlaybackQuality()}/${quality} (forced: ${forceQuality})
-          Fade           => ${fade}
-          Randomize      => ${random}
-          Loop           => ${loop}
-          Height         => ${height}px
-          Width          => ${width}px
-          HideVideo      => ${hide}`);
+          Volume          => ${volume}%
+          Quality         => ${player.getPlaybackQuality()}/${quality} (forced: ${forceQuality})
+          Fade            => ${fade}
+          Randomize       => ${random}
+          Loop            => ${loop}
+          Height          => ${height}px
+          Width           => ${width}px
+          HideVideo       => ${hide}
+          HideWhenStopped => ${hideWhenStopped}`);
 
           if (title) document.getElementById('info').innerHTML = `<span id="songTitle">${player.playerInfo.videoData.title}</span> <span id="songAuthor">${player.playerInfo.videoData.author}</span>`;
 

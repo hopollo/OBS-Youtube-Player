@@ -46,6 +46,7 @@
       let debugMode = url.searchParams.get("debug") == "true" ? true : false;
       let hide = url.searchParams.get("hide") == "true" ? true : false;
       let hideWhenStopped = url.searchParams.get('hideWhenStopped') == "true" ? true : false;
+      let controls = url.searchParams.get('controls') == "true" ? true : false;
 
       // Hide/Show the title area
       hide ? (document.querySelector("#player").style.display = "none") : null;
@@ -59,7 +60,7 @@
 
           playerVars: {
             autoplay: 1, // Auto-play the video on load
-            controls: 0, // Show pause/play buttons in player
+            controls: controls ? 1 : 0, // Toggle pause/play buttons in player
             showinfo: 0, // Hide the video title
             modestbranding: 1, // Hide the Youtube Logo
             disablekb: 1, // Disable keyboard shortcuts
@@ -194,7 +195,8 @@
           Height          => ${height}px
           Width           => ${width}px
           HideVideo       => ${hide}
-          HideWhenStopped => ${hideWhenStopped}`);
+          HideWhenStopped => ${hideWhenStopped}
+          Controls        => ${controls}`);
 
           if (title) document.getElementById('info').innerHTML = `<span id="songTitle">${player.playerInfo.videoData.title}</span> <span id="songAuthor">${player.playerInfo.videoData.author}</span>`;
 

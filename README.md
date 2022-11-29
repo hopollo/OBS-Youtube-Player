@@ -21,6 +21,7 @@ exemple : https://hopollo.github.io/OBS-Youtube-Player/?watch?v=lSqnqSSXTUI&list
  **random:** Randomize next song on playlist : &random=true|false (default is true)\
  **fade:** Enable the volume fade on song start & end : &fade=true|false (default is false)\
  **title:** Show the current song (name + author) : &title=true|false (default is false)\
+ **controls:** Toggle video controls (progress, sound, play button, etc...) : &controls=true|false (default is false)\
  **debug:** Enable debug mode & show info on console : &debug=true|false (default is false)
 
 Song title/author's display is fully customizable with CSS rules from OBS directly with `#songTitle` and `#songAuthor`

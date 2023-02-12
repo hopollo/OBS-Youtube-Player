@@ -38,6 +38,7 @@
       let height = url.searchParams.get("h") || 300;
       let quality = url.searchParams.get("quality") || "default";
       let forceQuality = url.searchParams.get("forcequality") == "true" ? true : false;
+      let speed = url.searchParams.get('speed') || 1;
       let startSeconds = url.searchParams.get("t") || 0;
       let index = url.searchParams.get("index") || 0;
       let random = url.searchParams.get("random") == "true" ? true : false;
@@ -74,6 +75,7 @@
             onReady,
             onStateChange,
             onPlaybackQualityChange,
+            onPlaybackRateChange,
             onError,
           },
         });
@@ -83,8 +85,8 @@
           player.setVolume(volume);
           // Apply choosen video quality
           player.setPlaybackQuality(quality);
-          // Enforce 1x speed, just in case
-          player.setPlaybackRate(1);
+          // Apply choosen video speed
+          player.setPlaybackRate(Number(speed));
           // Toggle looping
           player.setLoop(loop);
 
@@ -172,6 +174,11 @@
           forceQuality && player.setPlaybackQuality(quality);
         }
 
+        function onPlaybackRateChange() {
+          debug('Video speed changed by Youtube, force it back');
+          player.setPlaybackRate(Number(speed));
+        }
+
         function onError() {
           console.error("Error detected, video skipped");
           player.nextVideo();
@@ -189,6 +196,7 @@
           )}s
           Volume          => ${volume}%
           Quality         => ${player.getPlaybackQuality()}/${quality} (forced: ${forceQuality})
+          Speed           => ${player.getPlaybackRate()} (changed to: ${speed})
           Fade            => ${fade}
           Randomize       => ${random}
           Loop            => ${loop}

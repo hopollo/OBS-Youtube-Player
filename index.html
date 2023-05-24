@@ -61,15 +61,17 @@
 
           playerVars: {
             autoplay: 1, // Auto-play the video on load
-            controls: controls ? 1 : 0, // Toggle pause/play buttons in player
+            controls: controls === true ? 1 : 0, // Toggle pause/play buttons in player
             showinfo: 0, // Hide the video title
             modestbranding: 1, // Hide the Youtube Logo
+            playinline: 1,
             disablekb: 1, // Disable keyboard shortcuts
             fs: 0, // Hide the full screen button
             cc_load_policy: 0, // Hide closed captions
             iv_load_policy: 3, // Hide the Video Annotations
             autohide: 1, // Hide video controls when playing
             enablejsapi: 1,
+            rel: 0, // Hide videos recommandations when stopped
           },
           events: {
             onReady,
@@ -82,6 +84,7 @@
 
         function onReady(event) {
           // Enforcing defaults params
+          // Apply choose volume
           player.setVolume(volume);
           // Apply choosen video quality
           player.setPlaybackQuality(quality);
@@ -124,7 +127,9 @@
               break;
             case 0: // Stopped
               debug("Stopped");
-              loop && onAir();
+              if (listID && loop) {
+                player.cuePlaylist({ list: listID, index })
+              }
               hideWhenStopped && (document.querySelector("#container").style.display = "none");
               break;
             case 1: // Playing
@@ -154,6 +159,19 @@
         // Toggle Shuffle();
         let randomized = false;
         function shuffleSongs() {
+          if (random) {
+            player.setShuffle(true);
+          }
+
+          if (index !== 0) {
+            player.playVideo(index + 1); // 0 based indexes
+          }
+
+          if (!index && random) {
+            player.stopVideo();
+            player.nextVideo();
+          }
+          /*
           if (!randomized) {
             player.stopVideo();
             if (random) {
@@ -163,6 +181,7 @@
 
             randomized = true;
           }
+          */
         }
 
         function onPlaybackQualityChange() {
@@ -188,6 +207,7 @@
           debug(`On air : ${player.playerInfo.videoData.title} by ${
             player.playerInfo.videoData.author
           }
+          Video Id        => ${player.playerInfo.videoData.video_id}
           Queue position  => ${player.getPlaylistIndex() + 1}/${
             player.getPlaylist() ? player.getPlaylist().length : "null"
           }

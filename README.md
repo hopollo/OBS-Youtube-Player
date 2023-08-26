@@ -11,8 +11,8 @@ exemple : https://hopollo.github.io/OBS-Youtube-Player/?watch?v=lSqnqSSXTUI&list
 ## Features :
 
 **volume :** Volume of the video player : &volume=VALUE (0 to 100, default is 45)\
- **w :** Width of the video player : &width=VALUE (default is 535) \
- **h :** Height of the video player : &height=VALUE (default is 300)\
+ **w :** Width of the video player : &w=VALUE (default is 535) \
+ **h :** Height of the video player : &h=VALUE (default is 300)\
  **hide :** Hide the video player : &hide=true|false (default is false)\
  **hideWhenStopped :** Hide all when video stops : &hideWhenStopped=true|false (default is false)\
  **quality :** Video quality of the player : &quality=small|medium|large|hd720|hd1080|highres|default (default is default)\

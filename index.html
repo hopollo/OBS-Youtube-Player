@@ -41,7 +41,7 @@
       let quality = url.searchParams.get("quality") || "default";
       let forceQuality = url.searchParams.get("forcequality") == "true" ? true : false;
       let speed = url.searchParams.get('speed') || 1;
-      let startSeconds = url.searchParams.get("t") || 0;
+      let startSeconds = Number(url.searchParams.get("t")) || 0;
       let index = url.searchParams.get("index") || 0;
       let random = url.searchParams.get("random") == "true" ? true : false;
       let loop = url.searchParams.get("loop") == "false" ? false : true;
@@ -97,7 +97,7 @@
 
           if (songID && listID) {
             debug("Given first video/song, playlist comes after");
-            player.cueVideoById({ videoId: songID });
+            player.cueVideoById({ videoId: songID, startSeconds: startSeconds });
 
             player.addEventListener("onStateChange", ({ data }) => {
               if (data === 0) {
@@ -112,12 +112,12 @@
             debug("Playlist only detected");
             // Remark: (HoPollo) : YT playlists seems to be flushed by default, event starting with de same index, the video is different
 
-            player.loadPlaylist({ list: listID, index });
+            player.loadPlaylist({ list: listID, index: Number(index) });
           }
 
           if (songID && !listID) {
             debug("Song only detected");
-            player.cueVideoById({ videoId: songID });
+            player.cueVideoById({ videoId: songID, startSeconds: startSeconds });
           }
         }
 
@@ -130,7 +130,12 @@
             case 0: // Stopped
               debug("Stopped");
               if (listID && loop) {
-                player.cuePlaylist({ list: listID, index })
+                player.cuePlaylist({ list: listID, index: Number(index) });
+              } else if (!listID && loop && songID) {
+                // Loop single video by restarting it
+                debug("Looping single video");
+                player.cueVideoById({ videoId: songID, startSeconds: startSeconds });
+                player.playVideo();
               }
               hideWhenStopped && (document.querySelector("#container").style.display = "none");
               break;
@@ -138,6 +143,10 @@
               document.querySelector("#info").innerHTML = "";
               debug("Playing... ");
               hideWhenStopped && (document.querySelector("#container").style.display = "block");
+              // Apply start time if not already set via cueVideoById
+              if (startSeconds > 0 && Math.abs(player.getCurrentTime() - startSeconds) > 1) {
+                player.seekTo(startSeconds, true);
+              }
               onAir();
               break;
             case 2: // Pause
@@ -146,7 +155,7 @@
               break;
             case 3: // Loading
               debug("Loading...");
-              startSeconds > 0 && player.seekTo(startSeconds);
+              // startSeconds is now handled in cueVideoById/loadPlaylist and in Playing state
               break;
             case 5: // In queue
               debug("Queued...");

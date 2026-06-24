@@ -210,9 +210,12 @@
         }
 
         function onAir() {
+                    console.log(player.playerInfo.videoData)
+
           debug(`On air : ${player.playerInfo.videoData.title} by ${
             player.playerInfo.videoData.author
           }
+
           Video Id        => ${player.playerInfo.videoData.video_id}
           Queue position  => ${player.getPlaylistIndex() + 1}/${
             player.getPlaylist() ? player.getPlaylist().length : "null"
